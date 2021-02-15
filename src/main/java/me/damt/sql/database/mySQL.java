@@ -6,21 +6,29 @@ import java.sql.SQLException;
 
 public class mySQL {
 
-    private String host = "localhost";
-    private String port = "3306";
-    private String database = "test";
-    private String username = "root";
-    private String password = "";
-
+    private String host ;
+    private String port;
+    private String database;
+    private String username ;
+    private String password;
     private Connection connection;
+
+
+    public mySQL() {
+        this.host = "localhost";
+        this.port = "3306";
+        this.database = "test";
+        this.username = "root";
+        this.password = "";
+    }
 
     public boolean isConnected() {
         return (connection != null);
     }
 
-    public void connect() throws ClassNotFoundException, SQLException {
+    public void connect() throws SQLException {
         if (!isConnected()) {
-            connection = DriverManager.getConnection("jdbc:mysql://" +
+            this.connection = DriverManager.getConnection("jdbc:mysql://" +
                             host + ":" + port + "/" + database + "?useSSL=false",
                     username, password);
         }
@@ -29,7 +37,7 @@ public class mySQL {
     public void disconnect() {
         if (isConnected()) {
             try {
-                connection.close();
+                this.connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -37,6 +45,6 @@ public class mySQL {
 
     }
     public Connection getConnection() {
-        return connection;
+        return this.connection;
     }
 }

@@ -1,4 +1,4 @@
-package me.damt.sql;
+package me.damt.sql.util;
 
 import org.bukkit.ChatColor;
 

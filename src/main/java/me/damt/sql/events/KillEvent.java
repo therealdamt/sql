@@ -1,22 +1,24 @@
-package me.damt.sql;
+package me.damt.sql.events;
 
-import org.bukkit.Material;
+import me.damt.sql.SQL;
+import me.damt.sql.util.Util;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class KillEvent implements Listener {
 
-    private Main main;
-    public KillEvent(Main main) {
-        this.main = main;
+    private final SQL sql;
+
+    public KillEvent() {
+        this.sql = SQL.getInstance();
     }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        main.data.createPlayer(e.getPlayer());
+       sql.getData().createPlayer(e.getPlayer());
     }
 
 
@@ -24,7 +26,7 @@ public class KillEvent implements Listener {
     public void onKill(EntityDeathEvent e) {
         Player player = (Player) e.getEntity().getKiller();
         if (e.getEntity().getKiller() instanceof Player) {
-        main.data.addPoints(player.getUniqueId(), 1);
+            sql.getData().addPoints(player.getUniqueId(), 1);
             player.sendMessage(Util.chat("&7[&6&lPoints&7] &aPoint added!"));
 
         }

@@ -1,27 +1,25 @@
 package me.damt.sql.database;
 
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.ResultTreeType;
-import me.damt.sql.Main;
+import me.damt.sql.SQL;
 import org.bukkit.entity.Player;
 
-import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
 public class mySQLGetter {
-    private Main plugin;
 
-    public mySQLGetter(Main plugin) {
-        this.plugin = plugin;
+    private final SQL sql;
+    public mySQLGetter() {
+        this.sql = SQL.getInstance();
     }
 
     public void createTable() {
         PreparedStatement ps;
         try {
-            ps = plugin.SQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS mobpoints " +
+            ps = sql.getSQL().getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS mobpoints " +
                     "(NAME VARCHAR(100),UUID VARCHAR(100),POINTS INT(100),PRIMARY KEY (NAME))");
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -33,7 +31,7 @@ public class mySQLGetter {
         try {
             UUID uuid = player.getUniqueId();
             if (!exists(uuid)) {
-                PreparedStatement ps1 = plugin.SQL.getConnection().prepareStatement("SELECT * FROM mobpoints WHERE UUID=?" );
+                PreparedStatement ps1 = sql.getSQL().getConnection().prepareStatement("SELECT * FROM mobpoints WHERE UUID=?" );
                 ps1.setString(1, player.getName());
                 ps1.setString(2, uuid.toString());
                 ps1.executeUpdate();
@@ -47,7 +45,7 @@ public class mySQLGetter {
 
     public boolean exists(UUID uuid) {
         try {
-            PreparedStatement ps = plugin.SQL.getConnection().prepareStatement("INSERT IGNORE INFO mobpoints (NAME, UUID), VALUES (?,?)");
+            PreparedStatement ps = sql.getSQL().getConnection().prepareStatement("INSERT IGNORE INFO mobpoints (NAME, UUID), VALUES (?,?)");
             ps.setString(1, uuid.toString());
             ResultSet results = ps.executeQuery();
             if (results.next()) {
@@ -61,7 +59,7 @@ public class mySQLGetter {
     }
     public void addPoints(UUID uuid, int points) {
         try {
-            PreparedStatement ps = plugin.SQL.getConnection().prepareStatement("UPDATE mobpoints SET POINTS=? WHERE UUID=?");
+            PreparedStatement ps = sql.getSQL().getConnection().prepareStatement("UPDATE mobpoints SET POINTS=? WHERE UUID=?");
             ps.setInt(1, (getPoints(uuid)) + points);
             ps.setString(2, uuid.toString());
             ps.executeUpdate();
@@ -71,7 +69,7 @@ public class mySQLGetter {
     }
     public int getPoints(UUID uuid) {
         try {
-            PreparedStatement ps = plugin.SQL.getConnection().prepareStatement("SELECT POINTS FROM mobpoints");
+            PreparedStatement ps = sql.getSQL().getConnection().prepareStatement("SELECT POINTS FROM mobpoints");
             ps.setString(1, uuid.toString());
             ResultSet rs = ps.executeQuery();
             int points = 0;
